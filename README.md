@@ -64,14 +64,18 @@ needs to be built, only intended to aggregate the sub-projects. This would not n
 * [X] REPL Support
 * [X] Dependency Resolution
 * [X] Compilation Support
+* [X] Task "Depends On"
+* [X] Clean Support
 * [ ] Support `Configuration` to define Scala version and Plugin dependencies
 * [ ] Command-Line Invocation without REPL
 * [ ] Configurable Repositories
-* [ ] Task "Depends On"
-* [ ] Clean Support
 * [ ] Publish Local Support
+* [ ] Signing of JARs Support
 * [ ] Publish to Remote Support
 * [ ] Publish to Sonatype Support (Plugin)
 * [ ] Aggregate Project / Multi-Project Support
 * [ ] Scala Native PMC command to launch
 * [ ] Project Generator Support (With Plugin Support for Multiple Generators)
+* [ ] Scala.js support
+* [ ] Ability to integrate Maven goals
+* [ ] Ability to call SBT tasks

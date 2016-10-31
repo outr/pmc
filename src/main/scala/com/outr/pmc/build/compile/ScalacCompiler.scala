@@ -8,11 +8,8 @@ import com.outr.pmc.build.compile
 import scala.tools.nsc.{Global, Settings}
 
 class ScalacCompiler(implicit val project: pmc.Project) extends compile.Compiler {
-  def run(dependencies: => List[File] = jarDependencies.get,
+  def exec(dependencies: => List[File] = jarDependencies.get,
             outputDirectory: => File = this.outputDirectory.get): Unit = {
-    invokeDependencies()
-
-    logger.info(s"Compiling with scalac (${dependencies.length} dependencies)...")
     val s = new Settings()
     s.bootclasspath.append(dependencies.map(_.getAbsolutePath).mkString(":"))
     val out = outputDirectory
@@ -23,8 +20,7 @@ class ScalacCompiler(implicit val project: pmc.Project) extends compile.Compiler
     val sourceFiles = Compiler.findInputFiles(inputDirectories.get).map(_.getAbsolutePath)
     logger.info(s"Compiling ${sourceFiles.length} files (${sourceFiles.mkString(", ")}).")
     run.compile(sourceFiles)
-    logger.info("Compilation completed successfully.")
   }
 
-  override def apply(): Unit = run()
+  override protected def run(): Unit = exec()
 }

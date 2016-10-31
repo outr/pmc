@@ -1,5 +1,7 @@
 package com.outr.pmc
 
+import java.lang.reflect.Modifier
+
 import com.outr.pmc.repl.Interpreter
 import com.outr.scribe.Logging
 
@@ -10,20 +12,21 @@ trait Project extends Logging {
 
   private var tasksMap = Map.empty[String, Task]
 
-  private[pmc] def register[T <: Task](task: T): T = synchronized {
-    assert(!tasksMap.contains(task.name), s"Cannot register multiple tasks with the same name (${task.name})! Already registered: ${tasksMap(task.name).getClass.getName}, Trying to register: ${task.getClass.getName}.")
-    tasksMap += task.name -> task
-    task
-  }
-
-  val tasks = Task("tasks") {
+  val tasks = Task {
     println("Available tasks:")
     tasksMap.keys.foreach(n => println(s"\t$n"))
   }
 
   def init(iMain: IMain): Unit = {
-    tasksMap.values.foreach { task =>
-      iMain.bind(task.name, task.getClass.getName, task)
+    val map = getClass.getDeclaredMethods.collect {
+      case method if classOf[Task].isAssignableFrom(method.getReturnType)
+                     && Modifier.isPublic(method.getModifiers)
+                     && !method.getName.contains("$") => method.getName -> method.invoke(this).asInstanceOf[Task]
+    }.toMap
+    tasksMap = map
+
+    tasksMap.foreach {
+      case (name, task) => iMain.bind(name, task.getClass.getName, task)
     }
   }
 
@@ -31,4 +34,6 @@ trait Project extends Logging {
     // TODO: support command-line args not starting REPL
     new Interpreter(this)
   }
+
+  def error(t: Throwable): Unit = logger.error(t)
 }

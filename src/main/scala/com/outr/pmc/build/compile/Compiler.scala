@@ -11,8 +11,6 @@ trait Compiler extends Task {
   def jarDependencies = JARDependencies
   def inputDirectories = CompilerInputDirectories
   def outputDirectory = CompilerOutputDirectory
-
-  override def name: String = "compile"
 }
 
 object Compiler {

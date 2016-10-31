@@ -6,18 +6,42 @@ import com.outr.scribe.Logging
 trait Task extends (() => Unit) with Logging {
   val dependsOn = new TaskProperty[List[Task]](Nil)
 
-  def name: String
   def project: pmc.Project
 
-  project.register(this)
+  final def apply(): Unit = {
+    preRun()
+    val success = try {
+      run()
+      true
+    } catch {
+      case t: Throwable => {
+        project.error(t)
+        false
+      }
+    }
+    postRun(success)
+  }
 
-  def apply(): Unit
+  protected def preRun(): Unit = {
+    logger.info(s"Executing ${getClass.getSimpleName}...")
+    invokeDependencies()
+  }
+
+  protected def postRun(success: Boolean): Unit = {
+    if (success) {
+      logger.info(s"${getClass.getSimpleName} completed successfully.")
+    } else {
+      logger.warn(s"${getClass.getSimpleName} completed with an error!")
+    }
+  }
+
+  protected def run(): Unit
 
   protected def invokeDependencies(): Unit = dependsOn.get.foreach(_())
 
-  override def toString(): String = s"task:$name"
+  override def toString(): String = getClass.getSimpleName
 }
 
 object Task {
-  def apply(name: String)(f: => Unit)(implicit project: pmc.Project): SimpleTask = new SimpleTask(name, project, () => f)
+  def apply(f: => Unit)(implicit project: pmc.Project): SimpleTask = new SimpleTask(project, () => f)
 }

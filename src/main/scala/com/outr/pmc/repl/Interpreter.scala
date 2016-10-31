@@ -12,7 +12,9 @@ class Interpreter(project: Project) {
     override def createInterpreter(): Unit = {
       super.createInterpreter()
 
-      project.init(intp)
+      intp.beQuietDuring {
+        project.init(intp)
+      }
     }
   }
   repl.process(new Settings {

@@ -7,10 +7,7 @@ import coursier._
 import scalaz.concurrent.Task
 
 class CoursierDependencyResolution(implicit val project: pmc.Project) extends DependencyResolution {
-  def apply(): Unit = {
-    invokeDependencies()
-
-    logger.info("Resolving dependencies with Coursier...")
+  override protected def run(): Unit = {
     val dependencies = LibraryDependencies.get.map(d => coursier.Dependency(coursier.Module(d.organization, d.name), d.version))
     val start = Resolution(dependencies)
     // TODO: support repositories
@@ -27,7 +24,6 @@ class CoursierDependencyResolution(implicit val project: pmc.Project) extends De
       case Right(f) => f
     }
     // TODO: handle errors
-    logger.info(s"Resolved dependencies (${localDependencies.length}): ${localDependencies.map(_.getName).mkString(", ")}")
 //    println(s"Errors: ${errors}")
 //    println(s"Artifacts: ${localArtifacts}")
     jarDependencies := localDependencies
