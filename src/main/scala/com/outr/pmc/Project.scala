@@ -1,10 +1,11 @@
 package com.outr.pmc
 
 import com.outr.pmc.repl.Interpreter
+import com.outr.scribe.Logging
 
 import scala.tools.nsc.interpreter.IMain
 
-trait Project {
+trait Project extends Logging {
   implicit def thisProject: Project = this
 
   private var tasksMap = Map.empty[String, Task]

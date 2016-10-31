@@ -10,4 +10,7 @@ trait Build extends Project {
   // TODO: clean, publishLocal, publish
   val dependencyResolution: DependencyResolution = new CoursierDependencyResolution
   val compiler: Compiler = new ScalacCompiler
+
+  // Configure default dependencies
+  compiler.dependsOn := List(dependencyResolution)
 }
