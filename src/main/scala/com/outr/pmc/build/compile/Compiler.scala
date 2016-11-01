@@ -2,8 +2,8 @@ package com.outr.pmc.build.compile
 
 import java.io.File
 
-import com.outr.pmc.build.dependency.JARDependencies
 import com.outr.pmc.Task
+import com.outr.pmc.build.JARDependencies
 
 import scala.collection.mutable.ListBuffer
 

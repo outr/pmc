@@ -1,4 +1,4 @@
-package com.outr.pmc.build.dependency
+package com.outr.pmc.build
 
 import java.io.File
 

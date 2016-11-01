@@ -66,6 +66,8 @@ needs to be built, only intended to aggregate the sub-projects. This would not n
 * [X] Compilation Support
 * [X] Task "Depends On"
 * [X] Clean Support
+* [ ] Run Support
+* [ ] Test Support
 * [ ] Support `Configuration` to define Scala version and Plugin dependencies
 * [ ] Command-Line Invocation without REPL
 * [ ] Configurable Repositories
