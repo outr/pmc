@@ -1,5 +1,6 @@
 package com.outr.pmc.build.run
 
+import com.outr.jefe.launch.Launcher
 import com.outr.pmc.build.JARDependencies
 import com.outr.pmc.build.compile.CompilerOutputDirectory
 import com.outr.pmc.{Project, Task, TaskFailureException}
@@ -14,11 +15,14 @@ class Run(implicit val project: Project) extends Task {
     // TODO: support dynamic determination of mainClass if not defined
     mainClass.get match {
       case Some(mc) => {
-        if (fork.get) {
-          throw new TaskFailureException("Run.fork == true is not currently supported.")
+        val launcher = new Launcher(mc, jarDependencies.get)
+        val instance = if (fork.get) {
+          logger.info(s"Running forked in ${outputDirectory.get.getAbsolutePath}...")
+          launcher.process(outputDirectory.get)
         } else {
           throw new TaskFailureException("Run.fork == false is not currently supported.")
         }
+        instance.start()
       }
       case None => throw new TaskFailureException("Run.mainClass is undefined.")
     }
